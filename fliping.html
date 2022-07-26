@@ -81,7 +81,18 @@ ZapparBabylon.permissionRequestUI().then((granted) => {
 //const box = BABYLON.Mesh.CreateBox('box', 1, scene, false);
 //box.parent = trackerTransformNode;
 
+            
+                var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
+    sphere.position.y = 3;
+    sphere.position.z = 5;
+            
+            
+const instantWorldTracker = new ZapparBabylon.InstantWorldTracker();
 
+            const trackerTransformNode = new ZapparBabylon.InstantWorldAnchorTransformNode('tracker', camera, instantWorldTracker, scene);
+// Child in any 3D objects you'd like to track to this point in space
+sphere.parent = trackerTransformNode;
+            
 
 engine.runRenderLoop(() => {
   camera.updateFrame();
@@ -90,9 +101,7 @@ engine.runRenderLoop(() => {
 
 //ANTIGUO
 
-    var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
-    sphere.position.y = 3;
-    sphere.position.z = 5;
+
 
     //const xr = await scene.createDefaultXRExperienceAsync({
     //    uiOptions: {
