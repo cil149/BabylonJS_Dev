@@ -120,7 +120,7 @@ myMaterial.bumpTexture = new BABYLON.Texture("https://raw.githubusercontent.com/
 
     var text1 = new BABYLON.GUI.TextBlock();
             ///////// =================================================================================>>>>> FLIPING
-    text1.text = "Pulse en la casa o en la esfera. FLIPPING v4";
+    text1.text = "Pulse en la casa o en la esfera. FLIPPING v5";
     text1.color = "white";
     text1.fontSize = 24;
     advancedTexture.addControl(text1);   
@@ -131,8 +131,8 @@ myMaterial.bumpTexture = new BABYLON.Texture("https://raw.githubusercontent.com/
         //camera.target = newMeshes[0];
         //newMeshes[0].material=myMaterial;
         for (mesh in newMeshes){
-            newMeshes[mesh].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1);
-            newMeshes[mesh].position = new BABYLON.Vector3(1,0,5);
+            newMeshes[mesh].scaling = new BABYLON.Vector3(0.03, 0.03, 0.03);
+            //newMeshes[mesh].position = new BABYLON.Vector3(1,0,5);
             
              newMeshes[mesh].material=myMaterial;
 
