@@ -67,7 +67,28 @@
 // Create a Zappar AR camera
 const camera = new ZapparBabylon.Camera('camera', scene);
 
+// Request camera permissions and start the camera
+ZapparBabylon.permissionRequestUI().then((granted) => {
+    if (granted) camera.start();
+    else ZapparBabylon.permissionDeniedUI();
+});
 
+// Set up a tracker, in this case an image tracker
+const imageTracker = new ZapparBabylon.ImageTrackerLoader().load(targetfile);
+const trackerTransformNode = new ZapparBabylon.ImageAnchorTransformNode('tracker', camera, imageTracker, scene);
+
+// Child any 3D content you'd like tracked from the image into the trackerTransformNode
+const box = BABYLON.Mesh.CreateBox('box', 1, scene, false);
+box.parent = trackerTransformNode;
+
+
+
+engine.runRenderLoop(() => {
+  camera.updateFrame();
+  scene.render();
+});
+
+//ANTIGUO
 
     var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
     sphere.position.y = 3;
