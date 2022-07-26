@@ -74,12 +74,12 @@ ZapparBabylon.permissionRequestUI().then((granted) => {
 });
 
 // Set up a tracker, in this case an image tracker
-const imageTracker = new ZapparBabylon.ImageTrackerLoader().load(targetfile);
-const trackerTransformNode = new ZapparBabylon.ImageAnchorTransformNode('tracker', camera, imageTracker, scene);
+//const imageTracker = new ZapparBabylon.ImageTrackerLoader().load(targetfile);
+//const trackerTransformNode = new ZapparBabylon.ImageAnchorTransformNode('tracker', camera, imageTracker, scene);
 
 // Child any 3D content you'd like tracked from the image into the trackerTransformNode
-const box = BABYLON.Mesh.CreateBox('box', 1, scene, false);
-box.parent = trackerTransformNode;
+//const box = BABYLON.Mesh.CreateBox('box', 1, scene, false);
+//box.parent = trackerTransformNode;
 
 
 
