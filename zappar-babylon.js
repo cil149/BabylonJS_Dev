@@ -2580,7 +2580,7 @@
                                         e.append(t);
                                         let r = 30;
                                         setInterval((function () {
-                                                r--,
+                                                r++,
                                                 r >= 0 && (t.innerText = " (" + r.toString() + ")")
                                             }), 1e3),
                                         document.body.append(e)
