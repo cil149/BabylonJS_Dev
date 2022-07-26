@@ -83,16 +83,11 @@ ZapparBabylon.permissionRequestUI().then((granted) => {
 
             
                 var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
-    //sphere.position.y = 3;
-    //sphere.position.z = 5;
+    sphere.position.y = 3;
+    sphere.position.z = 5;
             
             
-const instantWorldTracker = new ZapparBabylon.InstantWorldTracker();
-instantWorldTracker.setAnchorPoseFromCameraOffset(0, 0, -5);
 
-            const trackerTransformNode = new ZapparBabylon.InstantWorldAnchorTransformNode('tracker', camera, instantWorldTracker, scene);
-// Child in any 3D objects you'd like to track to this point in space
-sphere.parent = trackerTransformNode;
             
 
 engine.runRenderLoop(() => {
@@ -141,7 +136,15 @@ myMaterial.bumpTexture = new BABYLON.Texture("https://raw.githubusercontent.com/
             
              newMeshes[mesh].material=myMaterial;
 
-            newMeshes[mesh].actionManager = new BABYLON.ActionManager(scene);
+            const instantWorldTracker = new ZapparBabylon.InstantWorldTracker();
+instantWorldTracker.setAnchorPoseFromCameraOffset(0, 0, -5);
+
+            const trackerTransformNode = new ZapparBabylon.InstantWorldAnchorTransformNode('tracker', camera, instantWorldTracker, scene);
+    // Child in any 3D objects you'd like to track to this point in space
+    newMeshes[mesh].parent = trackerTransformNode;
+            
+            
+            newMeshes[mesh].actionManager = new BABYLON.ActionManager(scene); 
             newMeshes[mesh].actionManager.registerAction(
              new BABYLON.ExecuteCodeAction(
             {
@@ -153,6 +156,7 @@ myMaterial.bumpTexture = new BABYLON.Texture("https://raw.githubusercontent.com/
             }
             )
             );
+
         }
 
 
