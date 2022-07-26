@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <title>Babylon.js sample code</title>
+
+        <!-- Babylon.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+        <script src="https://assets.babylonjs.com/generated/Assets.js"></script>
+        <script src="https://preview.babylonjs.com/ammo.js"></script>
+        <script src="https://preview.babylonjs.com/cannon.js"></script>
+        <script src="https://preview.babylonjs.com/Oimo.js"></script>
+        <script src="https://preview.babylonjs.com/earcut.min.js"></script>
+        <script src="https://preview.babylonjs.com/babylon.js"></script>
+        <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+        <script src="https://preview.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+        <script src="https://preview.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+        <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+        <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+        <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+        <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+        </style>
+    </head>
+<body>
+    <canvas id="renderCanvas"></canvas>
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+
+        var startRenderLoop = function (engine, canvas) {
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+            });
+        }
+
+        var engine = null;
+        var scene = null;
+        var sceneToRender = null;
+        var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
+        var createScene = async function () {
+
+    var scene = new BABYLON.Scene(engine);
+    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
+    camera.setTarget(BABYLON.Vector3.Zero());
+    camera.attachControl(canvas, true);
+    var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+    light.intensity = 0.7;
+
+
+    var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
+    sphere.position.y = 3;
+    sphere.position.z = 5;
+
+    const xr = await scene.createDefaultXRExperienceAsync({
+        uiOptions: {
+            sessionMode: 'immersive-ar'
+        }
+    });
+
+
+var myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
+
+myMaterial.diffuseTexture = new BABYLON.Texture("https://raw.githubusercontent.com/cil149/BabylonJS_Dev/main/cottage_diffuse.png", scene);
+myMaterial.bumpTexture = new BABYLON.Texture("https://raw.githubusercontent.com/cil149/BabylonJS_Dev/main/cottage_normal.png", scene);
+//myMaterial.emissiveTexture = new BABYLON.Texture("PATH TO IMAGE", scene);
+//myMaterial.ambientTexture = new BABYLON.Texture("PATH TO IMAGE", scene);
+//mesh.material = myMaterial;
+
+   
+ // GUI
+    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+    var text1 = new BABYLON.GUI.TextBlock();
+    text1.text = "Pulse en la casa o en la esfera.";
+    text1.color = "white";
+    text1.fontSize = 24;
+    advancedTexture.addControl(text1);   
+    var casita =BABYLON.SceneLoader.ImportMesh
+("Cube_Cube.002", "https://raw.githubusercontent.com/cil149/BabylonJS_Dev/main/", "cottage_obj.obj", scene
+, function (newMeshes) {
+        // Set the target of the camera to the first imported mesh
+        //camera.target = newMeshes[0];
+        //newMeshes[0].material=myMaterial;
+        for (mesh in newMeshes){
+            newMeshes[mesh].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1);
+            newMeshes[mesh].position = new BABYLON.Vector3(1,0,5);
+            
+             newMeshes[mesh].material=myMaterial;
+
+            newMeshes[mesh].actionManager = new BABYLON.ActionManager(scene);
+            newMeshes[mesh].actionManager.registerAction(
+             new BABYLON.ExecuteCodeAction(
+            {
+                trigger: BABYLON.ActionManager.OnPickTrigger,
+                //parameter: 'r'
+            },
+            function () { console.log('r button was pressed');           
+        text1.text = "Pulse en la casa o en la esfera.\n Ha pulsado en la casa.";
+            }
+            )
+            );
+        }
+
+
+         //text1.text += " --> "+newMeshes.length;
+   // element.x=600;
+    });
+
+
+
+                sphere.actionManager = new BABYLON.ActionManager(scene);
+            sphere.actionManager.registerAction(
+             new BABYLON.ExecuteCodeAction(
+            {
+                trigger: BABYLON.ActionManager.OnPickTrigger,
+                //parameter: 'r'
+            },
+            function () { console.log('r button was pressed');           
+        text1.text = "Pulse en la casa o en la esfera.\n Ha pulsado en la esfera.";
+            }
+            )
+            );
+
+//casita.x=600; 
+
+
+
+    return scene;
+};
+                window.initFunction = async function() {
+                    
+                    
+                    var asyncEngineCreation = async function() {
+                        try {
+                        return createDefaultEngine();
+                        } catch(e) {
+                        console.log("the available createEngine function failed. Creating the default engine instead");
+                        return createDefaultEngine();
+                        }
+                    }
+
+                    window.engine = await asyncEngineCreation();
+        if (!engine) throw 'engine should not be null.';
+        startRenderLoop(engine, canvas);
+        window.scene = createScene();};
+        initFunction().then(() => {scene.then(returnedScene => { sceneToRender = returnedScene; });
+                            
+        });
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+</html>
